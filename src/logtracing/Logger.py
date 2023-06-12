@@ -1,7 +1,7 @@
 import os
 import traceback
-from Types import PrepareStackTrace, CodeLine, ErrorStack, OsVars, PythonVars
 from typing import Union
+from Types import PrepareStackTrace, CodeLine, ErrorStack, OsVars, PythonVars
 
 
 class Logger:
