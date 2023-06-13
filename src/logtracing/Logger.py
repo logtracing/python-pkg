@@ -117,6 +117,7 @@ if __name__ == '__main__':
     except Exception as e:
         logger.add_extra('one_more_extra_vars', 'test')
 
+        # This is throw in an expection
         logger.add_extra('one_more_extra_vars', 0)
         logger.track_error('')
         logger.report()
