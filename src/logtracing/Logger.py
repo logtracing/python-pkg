@@ -30,7 +30,7 @@ class Logger:
         pass
 
     def add_extra(self, identifier: str, extra) -> None:
-        pass
+        self.extra_vars[identifier] = extra
 
     def read_line(self, file_path: str, start: int, end: int) -> CodeLine:
         pass
