@@ -49,7 +49,6 @@ class Logger:
         extra = json.dumps(extra) if isinstance(extra, dict) else extra
         self.extra_vars[identifier] = extra
 
-
     def read_line(self, file_path: str, start: int, end: int) -> CodeLine:
         pass
 
