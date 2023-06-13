@@ -26,7 +26,6 @@ class ErrorStack:
         self.code = code
 
 
-
 class OsUser:
     def __init__(self, username: str, uid: int, gid: int):
         self.username = username,
