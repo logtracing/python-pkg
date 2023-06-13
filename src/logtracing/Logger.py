@@ -12,7 +12,7 @@ from Types import CodeLine, ErrorStack, PythonVars, OsVars, PrepareStackTrace
 class Logger:
     def __init__(self, flow: str):
         if not flow:
-           raise Exception('Flow argument is missing')
+            raise Exception('Flow argument is missing')
 
         self._flow = flow
         self.prepare_stack_trace: PrepareStackTrace = traceback.extract_stack
@@ -29,7 +29,7 @@ class Logger:
 
     def track_error(self, err) -> None:
         if not err:
-           raise Exception('Error argument is missing')
+            raise Exception('Error argument is missing')
 
     def report(self) -> None:
         self.load_os_vars()
@@ -43,10 +43,10 @@ class Logger:
         print(self.extra_vars)
 
     def add_extra(self, identifier: str, extra) -> None:
-        if type(extra) != dict and type(extra) != str:
-           raise Exception('extra must be dict or str')
-        
-        extra = json.dumps(extra)
+        if not isinstance(extra, dict) and not isinstance(extra, str):
+            raise Exception('extra must be dict or str')
+
+        extra = json.dumps(extra) if isinstance(extra, dict) else extra
         self.extra_vars[identifier] = extra
 
     def read_line(self, file_path: str, start: int, end: int) -> CodeLine:
@@ -105,7 +105,7 @@ class Logger:
     def load_env_vars(self) -> None:
         self.env_vars = os.environ
 
-
+# Testing code
 if __name__ == '__main__':
     logger = Logger('OH')
     logger.add_extra('test_extra_var', {
@@ -115,9 +115,8 @@ if __name__ == '__main__':
     try:
         raise Exception("Mensaje de error")
     except Exception as e:
-      logger.add_extra('one_more_extra_vars', {
-          "test": 1
-      })
+        logger.add_extra('one_more_extra_vars', 'test')
 
-      logger.track_error('')
-      logger.report()
+        logger.add_extra('one_more_extra_vars', 0)
+        logger.track_error('')
+        logger.report()
