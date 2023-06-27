@@ -57,41 +57,36 @@ To start tracking and logging errors in your Python application, follow these st
       tracer.log_error(e)
   ```
 
-The log_error method will log the error message, stack trace, and any other relevant information.
+  The log_error method will log the error message, stack trace, and any other relevant information.
 
 Customize the logging behavior (optional):
 
 By default, logtracing-python logs errors to the console. If you want to customize the logging behavior, you can configure the logger used by the Tracer class. You can refer to the Python logging documentation for more information on how to configure the logger to suit your needs.
 
-Running the Tests
+## Running the Tests
 To run the tests for logtracing-python, follow these steps:
 
 Clone the repository:
 
-bash
-Copy code
-git clone https://github.com/your-username/logtracing-python.git
+    git clone https://github.com/your-username/logtracing-python.git
+
 Navigate to the project directory:
 
-bash
-Copy code
-cd logtracing-python
+    cd logtracing-python
+
 Install the required dependencies:
 
-Copy code
-pip install -r requirements.txt
+    pip install -r requirements.txt
 Run the tests using pytest:
 
-Copy code
-pytest
+    pytest
 The test suite will be executed, and the results will be displayed in the console.
 
-Contributing
+## Contributing
 Contributions are welcome! If you encounter any issues, have suggestions, or want to contribute to the project, please open an issue or submit a pull request on the GitHub repository.
 
-License
+## License
 This project is licensed under the MIT License. See the LICENSE file for more information.
 
 Feel free to update the placeholders like your-username with the appropriate information based on your GitHub username and project details.
 
-Remember to provide comprehensive instructions and explanations in your README.md file to help users understand and utilize your package effectively.
