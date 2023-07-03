@@ -43,7 +43,7 @@ class Logger:
         print(self.extra_vars)
 
     def add_extra(self, identifier: str, extra) -> None:
-        if not isinstance(extra, dict) and not isinstance(extra, str):
+        if not isinstance(extra, (dict, str)):
             raise ValueError('extra must be dict or str')
 
         extra = json.dumps(extra) if isinstance(extra, dict) else extra
