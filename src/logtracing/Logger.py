@@ -24,7 +24,7 @@ class Logger:
         self.code_lines_limit: int = 5
 
     @property
-    def flow(self):
+    def flow(self) -> str:
         return self._flow
 
     def track_error(self, err) -> None:
