@@ -66,7 +66,6 @@ class Logger:
 
         return lines
 
-
     def use_custom_prepare_stack_trace(self) -> None:
         [traceback_string] = traceback.format_tb(e.__traceback__)
         print(traceback_string)
@@ -137,22 +136,3 @@ class Logger:
 
     def load_env_vars(self) -> None:
         self.env_vars = os.environ
-
-# Testing code
-if __name__ == '__main__':
-    logger = Logger('OH')
-    logger.add_extra('test_extra_var', {
-        "algo": 0
-    })
-
-    try:
-        res1 = 10+2
-        res2 = 10/0
-        res3 = 10/5
-    except Exception as e:
-        # logger.add_extra('one_more_extra_vars', 'test')
-
-        # This is throw in an expection
-        # logger.add_extra('one_more_extra_vars', 0)
-        # logger.track_error('')
-        logger.report()
