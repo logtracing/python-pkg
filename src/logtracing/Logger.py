@@ -35,12 +35,13 @@ class Logger:
         self.load_os_vars()
         self.load_python_vars()
         self.load_env_vars()
+        self.use_custom_prepare_stack_trace()
 
-        print(self.err_stack)
-        print(self.os_vars)
-        print(self.env_vars)
+        #print(self.err_stack)
+        #print(self.os_vars)
+        #print(self.env_vars)
         print(self.python_vars)
-        print(self.extra_vars)
+        #print(self.extra_vars)
 
     def add_extra(self, identifier: str, extra) -> None:
         if not isinstance(extra, dict) and not isinstance(extra, str):
@@ -49,11 +50,43 @@ class Logger:
         extra = json.dumps(extra) if isinstance(extra, dict) else extra
         self.extra_vars[identifier] = extra
 
-    def read_line(self, file_path: str, start: int, end: int) -> CodeLine:
-        pass
+    def read_lines(self, file_path: str, start: int, end: int) -> CodeLine:
+        lines = []
+       
+        with open(file_path, 'r') as file:
+            file_content = file.readlines()
+
+            for i in range(start -1, end):
+                line_number = i+1
+                line_content = file_content[i].rstrip('\n')
+                lines.append({
+                   'line': line_number,
+                   'content': line_content
+                })
+
+        return lines
+
 
     def use_custom_prepare_stack_trace(self) -> None:
-        pass
+        [traceback_string] = traceback.format_tb(e.__traceback__)
+        print(traceback_string)
+        file, line_number, line_content = traceback_string.split(',')
+        file_path = file.split('"')[1]
+        line_number = line_number.strip().split(' ')[1]
+        line_content = line_content.split('>')[1].strip()
+        code = []
+
+        if file_path: 
+            code = self.read_lines(file_path, int(line_number) - self.code_lines_limit, int(line_number) + self.code_lines_limit)
+
+        obj = {
+            "file_path": file_path,
+            "line_number": line_number,
+            "line_content": line_content,
+            "code": code,
+        }
+
+        print(obj)
 
     def restore_prepare_stack_trace(self) -> None:
         traceback.extract_stack = self.prepare_stack_trace
@@ -113,11 +146,13 @@ if __name__ == '__main__':
     })
 
     try:
-        raise Exception("Mensaje de error")
+        res1 = 10+2
+        res2 = 10/0
+        res3 = 10/5
     except Exception as e:
-        logger.add_extra('one_more_extra_vars', 'test')
+        # logger.add_extra('one_more_extra_vars', 'test')
 
         # This is throw in an expection
-        logger.add_extra('one_more_extra_vars', 0)
-        logger.track_error('')
+        # logger.add_extra('one_more_extra_vars', 0)
+        # logger.track_error('')
         logger.report()
