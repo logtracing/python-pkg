@@ -1,5 +1,5 @@
 from main import BaseModel
-from error_exception import ErrorExceptions
+from error_exception import ErrorException
 from peewee import DateTimeField, CharField, ForeignKeyField
 
 
@@ -8,7 +8,7 @@ class UnknownField(object):
 
 
 class ExecutionDetails(BaseModel):
-    error_exception = ForeignKeyField(column_name='errorExceptionId', field='id', model=ErrorExceptions, null=True)
+    error_exception = ForeignKeyField(column_name='errorExceptionId', field='id', model=ErrorException, null=True)
     execution_finish_time = DateTimeField(column_name='executionFinishTime', null=True)
     language = CharField(null=True)
     version = CharField(null=True)

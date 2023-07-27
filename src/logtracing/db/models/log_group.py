@@ -6,7 +6,7 @@ class UnknownField(object):
     def __init__(self, *_, **__): pass
 
 
-class LogGroups(BaseModel):
+class LogGroup(BaseModel):
     created_at = DateTimeField(column_name='createdAt')
     name = CharField(null=True, unique=True)
     updated_at = DateTimeField(column_name='updatedAt')

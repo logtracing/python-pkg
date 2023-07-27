@@ -1,5 +1,5 @@
 from main import BaseModel
-from error_exception import ErrorExceptions
+from error_exception import ErrorException
 from peewee import CharField, ForeignKeyField
 
 
@@ -9,7 +9,7 @@ class UnknownField(object):
 
 class SystemDetails(BaseModel):
     arch = CharField(null=True)
-    error_exception = ForeignKeyField(column_name='errorExceptionId', field='id', model=ErrorExceptions, null=True)
+    error_exception = ForeignKeyField(column_name='errorExceptionId', field='id', model=ErrorException, null=True)
     hostname = CharField(null=True)
     platform = CharField(null=True)
     platform_release = CharField(column_name='platformRelease', null=True)

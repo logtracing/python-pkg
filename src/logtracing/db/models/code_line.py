@@ -7,7 +7,7 @@ class UnknownField(object):
     def __init__(self, *_, **__): pass
 
 
-class CodeLines(BaseModel):
+class CodeLine(BaseModel):
     content = CharField(null=True)
     is_error_line = IntegerField(column_name='isErrorLine', null=True)
     line = IntegerField(null=True)
