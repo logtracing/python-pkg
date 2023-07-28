@@ -8,11 +8,11 @@ class UnknownField(object):
 
 
 class Stack(BaseModel):
+    file = CharField(null=True)
+    line = IntegerField(null=True)
+    function = CharField(null=True)
     column = IntegerField(null=True)
     error_exception = ForeignKeyField(column_name='errorExceptionId', field='id', model=ErrorException, null=True)
-    file = CharField(null=True)
-    function = CharField(null=True)
-    line = IntegerField(null=True)
 
     class Meta:
         table_name = 'stack'

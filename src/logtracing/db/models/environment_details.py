@@ -8,9 +8,9 @@ class UnknownField(object):
 
 
 class EnvironmentDetails(BaseModel):
-    error_exception = ForeignKeyField(column_name='errorExceptionId', field='id', model=ErrorException, null=True)
     name = CharField(null=True)
     value = TextField(null=True)
+    error_exception = ForeignKeyField(column_name='errorExceptionId', field='id', model=ErrorException, null=True)
 
     class Meta:
         table_name = 'environmentDetails'

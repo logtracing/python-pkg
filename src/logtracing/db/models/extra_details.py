@@ -8,10 +8,10 @@ class UnknownField(object):
 
 
 class ExtraDetails(BaseModel):
-    error_exception = ForeignKeyField(column_name='errorExceptionId', field='id', model=ErrorException, null=True)
-    is_json = IntegerField(column_name='isJson', null=True)
     name = CharField(null=True)
     value = CharField(null=True)
+    is_json = IntegerField(column_name='isJson', null=True)
+    error_exception = ForeignKeyField(column_name='errorExceptionId', field='id', model=ErrorException, null=True)
 
     class Meta:
         table_name = 'extraDetails'

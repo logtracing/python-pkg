@@ -7,8 +7,8 @@ class UnknownField(object):
 
 
 class LogGroup(BaseModel):
-    created_at = DateTimeField(column_name='createdAt')
     name = CharField(null=True, unique=True)
+    created_at = DateTimeField(column_name='createdAt')
     updated_at = DateTimeField(column_name='updatedAt')
 
     class Meta:
