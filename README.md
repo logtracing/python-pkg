@@ -2,67 +2,134 @@
   <img width="442" height="90" src="https://github.com/logtracing/node-pkg/assets/55886451/a605b6fd-14c8-4d0d-9cfa-c8f0742aa5ec">
 </p>
 
-<p align="center">Suite to manage and track errors in your application using your own resources.</p>
+<p align="center">The LogTracing Node.js package is a component of the comprehensive LogTracing suite, dedicated to facilitating error tracking and log management across various applications.</p>
+
 
 <p align="center">
-  <img src="https://github.com/logtracing/node-pkg/actions/workflows/node.js.yml/badge.svg">
-  <img src="https://img.shields.io/npm/v/@logtracing/node?color=blue">
-  <img src="https://img.shields.io/npm/l/@logtracing/node?color=blue">
+  <a href="https://github.com/logtracing/python-pkg/actions"><img src="https://github.com/logtracing/python-pkg/actions/workflows/python.yml/badge.svg"></a>
+  <a href="https://pypi.org/project/logtracing-python/"><img src="https://img.shields.io/pypi/v/logtracing-python?color=blue"></a>
+  <a href="https://github.com/logtracing/python-pkg/blob/main/LICENSE"><img src="https://img.shields.io/pypi/l/logtracing-python?color=blue"></a>
 </p>
 
-## Overview
-
-**Logtracing** is a suite that allows you to track errors that occur in your applications. It also allows you to have full control of how and where to store all the collected information, this means that you need to have your own database where all the information will be stored.
-
-Also, **Logtracing** provides a dashboard to monitoring your errors, but you can use or create your own monitoring dashboard.
-
-Right now is available for the following tech stacks:
-- JavaScript (NodeJS)
-- Python (In Progress)
-
-**What information does this suite track?**
-- Error Stack
-- Code lines of each function
-- Environment variables
-- SO Information
-
-## :wrench: Configuration
+## :book: Configuration
 
 ### :open_file_folder: Creating your database
-Before start using this suite, you need to have a MySQL database ready to be used (locally or in a server) and create the required tables.
+Before start using this suite, you need to have a MySQL database ready to be used (locally or on a server) and create the required tables.
 
-You can find the migration SQL file here: [SQL for tables](https://github.com/logtracing/node-pkg/blob/main/prisma/migrations/20230621050013_init/migration.sql)
+You can find the migration SQL file here: [SQL for tables](https://github.com/logtracing/node-pkg/blob/main/database.sql)
 
-## Installation
+## :wrench: Initial configuration
 You can install logtracing-python using pip:
 
-    ./pip install logtracing-python --user
+    ./pip install logtracing --user
 
-## Usage
-To start tracking and logging errors in your Python application, follow these steps:
+Create a `.env` file and add the following properties with your own information, replace `[ENV]` with your environment (`DEV`, `TEST`, or `PROD`):
+```properties
+MYSQL_USERNAME_[ENV]=
+MYSQL_PASSWORD_[ENV]=
+MYSQL_DATABASE_[ENV]=
+MYSQL_HOST_[ENV]=
+MYSQL_PORT_[ENV]=
+```
+Load your `.env` file using the [python-dotenv module](https://pypi.org/project/python-dotenv/) at the very beginning of your code (before other code runs):
+```python
+import dotenv
+dotenv.load_dotenv()
 
- 1. Import the Tracer class from the logtracing module:
-  ```python
-  from logtracing import Tracer
-  ```
- 2. Create an instance of the Tracer class:
-  ```python
-  tracer = Tracer()
-  ```
- 3. Start logging errors by calling the log_error method on the tracer instance whenever an error occurs in your application:
-  ```python
-    try:
-      # Your code here
-    except Exception as e:
-      tracer.log_error(e)
-  ```
+# or
+from dotenv import load_dotenv
+load_dotenv()
+```
 
-  The log_error method will log the error message, stack trace, and any other relevant information.
+Import the package in your code:
+```python
+from logtracing import Logger, ExceptionLogger
+```
 
-Customize the logging behavior (optional):
+### Usage
+### `Logger`
+You can write your own logs using the `Logger` class:
+```python
+from logtracing import Logger
 
-By default, logtracing-python logs errors to the console. If you want to customize the logging behavior, you can configure the logger used by the Tracer class. You can refer to the Python logging documentation for more information on how to configure the logger to suit your needs.
+my_logger = Logger('MY APP LOGGER')
 
+trace = my_logger.trace('Example of a trace log message')
+debug = my_logger.debug('Example of a debug log message')
+info = my_logger.info('Example of an info log message')
+warn = my_logger.warn('Example of a warn log message')
+error = my_logger.error('Example of an error log message')
+fatal = my_logger.fatal('Example of a fatal log message')
+```
+
+### `ExceptionLogger`
+You can also track the exceptions in your code, to have a big picture of what happened when your application fails. Start tracking your errors:
+```python
+from logtracing import ExceptionLogger
+
+ex_logger = ExceptionLogger('MY APP EXCEPTION LOGGER')
+
+user = {
+  'username': 'admin',
+  'email': 'email@admin.com'
+}
+
+def foo():
+    raise Exception('Foo Error')
+
+def bar():
+    foo()
+
+# You can add extra information that could be useful to understand the error
+ex_logger.add_extra('User information', {
+    'user': user,
+})
+
+try:
+    bar()
+except Exception as err:
+    ex_logger.add_extra('More information', 'Handled Error Message')
+
+    # Start to track the error
+    ex_logger.track_error(err)
+
+    # When finished, call report() to send all the information to your DB
+    ex_logger.report()
+```
+
+**After doing this, you'll have in your configured database all the information related to the error that you tracked.**
+
+You'll find more examples in [this folder](https://github.com/logtracing/python-pkg/blob/main/examples).
+
+## :arrow_down: Installation for development purposes
+### Getting the code
+Clone this project:
+```bash
+git clone git@github.com:logtracing/node-pkg.git
+# Or 
+# We recommend you change the name of the folder in your machine
+git clone git@github.com:logtracing/node-pkg.git logtracing-nodejs
+```
+
+Install dependencies:
+```bash
+cd python-pkg && pip install -r requirements-dev.txt
+```
+
+Create a `.env` file and fill it with the missing information:
+```bash
+cp .env.example .env
+```
+
+Transpile TS files into JS files:
+```bash
+npm run build
+```
+
+Run the tests:
+```bash
+npm run test
+```
 ## Running the Tests
 To run the tests for logtracing-python, follow these steps:
 
@@ -82,11 +149,18 @@ Run the tests using pytest:
     pytest
 The test suite will be executed, and the results will be displayed in the console.
 
-## Contributing
-Contributions are welcome! If you encounter any issues, have suggestions, or want to contribute to the project, please open an issue or submit a pull request on the GitHub repository.
+### Configuring MySQL
+This project uses `mysql` as a database provider, so it is important to have a database before starting to make changes.
+
+We have a `docker-compose.yml` file that provides you with a database ready to use; you just need to execute:
+```bash
+docker compose up
+```
+
+Then, when the container is up, you can execute the migrations by running:
+```bash
+python migrate.py
+```
 
 ## License
-This project is licensed under the MIT License. See the LICENSE file for more information.
-
-Feel free to update the placeholders like your-username with the appropriate information based on your GitHub username and project details.
-
+[MIT](https://github.com/logtracing/python-pkg/blob/main/LICENSE)
