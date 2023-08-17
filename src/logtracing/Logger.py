@@ -83,36 +83,44 @@ class Logger:
                 }
             }
         except Exception as error:
-            raise RuntimeError(f"An error occurred while loading OS variables: {error}")
+            raise RuntimeError(f"An error occurred while loading OS variables: {error}") from error
 
     def get_cpus_info(self) -> list:
-        cpus_info = []
-        cpus = psutil.cpu_times(percpu=True)
+        try:
+            cpus_info = []
+            cpus = psutil.cpu_times(percpu=True)
 
-        for cpu in cpus:
-            cpu_data = {
-                "model": platform.processor(),
-                "speed": psutil.cpu_freq().current,
-                "times": {
-                    "user": cpu.user,
-                    "nice": cpu.nice,
-                    "sys": cpu.system,
-                    "idle": cpu.idle,
-                    "irq": cpu.irq
+            for cpu in cpus:
+                cpu_data = {
+                    "model": platform.processor(),
+                    "speed": psutil.cpu_freq().current,
+                    "times": {
+                        "user": cpu.user,
+                        "nice": cpu.nice,
+                        "sys": cpu.system,
+                        "idle": cpu.idle,
+                        "irq": cpu.irq
+                    }
                 }
-            }
 
-            cpus_info.append(cpu_data)
+                cpus_info.append(cpu_data)
 
-        return cpus_info
+            return cpus_info
+        except Exception as error:
+            raise RuntimeError(f"An error occurred while getting CPU info: {error}") from error
 
     def load_python_vars(self) -> None:
-        self.python_vars = {
-            "version": sys.version,
-            "args": sys.argv,
-            "datetime": int(time.time())
-        }
+        try:    
+            self.python_vars = {
+                "version": sys.version,
+                "args": sys.argv,
+                "datetime": int(time.time())
+            }
+        except Exception as error:
+            raise RuntimeError(f"An error occurred while loading Python variables: {error}") from error
 
     def load_env_vars(self) -> None:
-        self.env_vars = os.environ
-
+        try:
+            self.env_vars = os.environ
+        except Exception as error:
+            raise RuntimeError(f"An error occurred while loading environment variables: {error}") from error
