@@ -13,7 +13,7 @@ class Logger:
     def __init__(self, flow: str):
         """Initialize the Logger with the given flow."""
         if not flow:
-            raise Exception('Flow argument is missing')
+            raise ValueError('Flow argument is missing')
 
         self._flow = flow
         self.prepare_stack_trace: PrepareStackTrace = traceback.extract_stack
@@ -31,12 +31,16 @@ class Logger:
 
     def track_error(self, err) -> None:
         if not err:
-            raise Exception('Error argument is missing')
+            raise ValueError('Error argument is missing')
 
     def report(self) -> None:
-        self.load_os_vars()
-        self.load_python_vars()
-        self.load_env_vars()
+        try:
+            self.load_os_vars()
+            self.load_python_vars()
+            self.load_env_vars()
+        except Exception as error:
+            print(f"An error occurred while loading variables: {error}")
+            return
 
         print(self.err_stack)
         print(self.os_vars)
