@@ -67,20 +67,23 @@ class Logger:
         traceback.extract_stack = self.prepare_stack_trace
 
     def load_os_vars(self) -> None:
-        self.os_vars = {
-            "arch": platform.architecture(),
-            "cpus": self.get_cpus_info(),
-            "hostname": platform.node(),
-            "machine": platform.machine(),
-            "platform": platform.system(),
-            "release": platform.release(),
-            "version": platform.version(),
-            "user": {
-                "username": psutil.users()[0].name,
-                "uid": os.getuid(),
-                "gid": os.getgid(),
+        try:
+            self.os_vars = {
+                "arch": platform.architecture(),
+                "cpus": self.get_cpus_info(),
+                "hostname": platform.node(),
+                "machine": platform.machine(),
+                "platform": platform.system(),
+                "release": platform.release(),
+                "version": platform.version(),
+                "user": {
+                    "username": psutil.users()[0].name,
+                    "uid": os.getuid(),
+                    "gid": os.getgid(),
+                }
             }
-        }
+        except Exception as error:
+            raise RuntimeError(f"An error occurred while loading OS variables: {error}")
 
     def get_cpus_info(self) -> list:
         cpus_info = []
