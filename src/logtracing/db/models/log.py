@@ -1,5 +1,5 @@
-from main import BaseModel
-from log_group import LogGroup
+from .main import BaseModel
+from .log_group import LogGroup
 from peewee import SQL, Check, TextField, DateTimeField, CharField, ForeignKeyField
 
 

@@ -1,4 +1,4 @@
-from main import BaseModel
+from .main import BaseModel
 from peewee import DateTimeField, CharField
 
 

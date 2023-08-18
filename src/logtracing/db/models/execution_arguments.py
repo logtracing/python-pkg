@@ -1,5 +1,5 @@
-from main import BaseModel
-from execution_details import ExecutionDetails
+from .main import BaseModel
+from .execution_details import ExecutionDetails
 from peewee import CharField, ForeignKeyField
 
 
