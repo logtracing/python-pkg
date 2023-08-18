@@ -1,5 +1,4 @@
 {
-  "prerun": "# some code here",
   "directory": "db/migrations",
   "history": "migratehistory",
   "models": [
