@@ -6,7 +6,7 @@ import psutil
 import platform
 import traceback
 from typing import Union
-from Types import CodeLine, ErrorStack, PythonVars, OsVars, PrepareStackTrace
+from types import CodeLine, ErrorStack, PythonVars, OsVars, PrepareStackTrace
 
 
 class Logger:
