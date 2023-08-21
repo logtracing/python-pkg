@@ -1,0 +1,16 @@
+{
+  "directory": "db/migrations",
+  "history": "migratehistory",
+  "models": [
+    "db.models.code_line.CodeLine",
+    "db.models.environment_details.EnvironmentDetails",
+    "db.models.error_exception.ErrorException",
+    "db.models.execution_arguments.ExecutionArguments",
+    "db.models.execution_details.ExecutionDetails",
+    "db.models.extra_details.ExtraDetails",
+    "db.models.log_group.LogGroup",
+    "db.models.log.Log",
+    "db.models.stack.Stack",
+    "db.models.system_details.SystemDetails"
+  ]
+}

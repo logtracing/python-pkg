@@ -1,5 +1,5 @@
-from main import BaseModel
-from error_exception import ErrorExceptions
+from .main import BaseModel
+from .error_exception import ErrorException
 from peewee import TextField, CharField, ForeignKeyField
 
 
@@ -8,9 +8,9 @@ class UnknownField(object):
 
 
 class EnvironmentDetails(BaseModel):
-    error_exception = ForeignKeyField(column_name='errorExceptionId', field='id', model=ErrorExceptions, null=True)
     name = CharField(null=True)
     value = TextField(null=True)
+    error_exception = ForeignKeyField(column_name='errorExceptionId', field='id', model=ErrorException, null=True)
 
     class Meta:
         table_name = 'environmentDetails'
