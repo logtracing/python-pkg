@@ -1,5 +1,6 @@
+import traceback
 from typing import Union
-from db.models.log_group import LogGroup
+from db.models.log_group import LogGroups
 
 class AbstractLogger:
     def __init__(self, flow: str):
@@ -12,13 +13,13 @@ class AbstractLogger:
     def flow(self) -> str:
         return self._flow
 
-    async def get_or_create_group(self, name: str) -> Union[LogGroup, None]:
+    def get_or_create_group(self, name: str) -> Union[LogGroups, None]:
         try:
             group_name = name.lower()
 
-            group, _ = await LogGroup.get_or_create(name=group_name)
+            group, _ = LogGroups.get_or_create(name=group_name)
 
             return group
-        except Exception as err:
-            print(err)
+        except:
+            traceback.print_exc()
             return None
