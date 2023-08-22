@@ -11,7 +11,6 @@ from Types import CodeLine, ErrorStack, PythonVars, OsVars, PrepareStackTrace
 
 class Logger:
     def __init__(self, flow: str):
-        """Initialize the Logger with the given flow."""
         if not flow:
             raise ValueError('Flow argument is missing')
 
@@ -26,7 +25,6 @@ class Logger:
 
     @property
     def flow(self) -> str:
-        """Return the flow attribute."""
         return self._flow
 
     def track_error(self, err) -> None:
