@@ -1,2 +1,1 @@
-from Logger import *
-from Types import *
+from logger import *
