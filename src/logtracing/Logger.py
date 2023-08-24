@@ -32,7 +32,7 @@ class Logger(AbstractLogger):
     ) -> Log:
         try:
             return self.save(LogType.types['TRACE'], content, opts)
-        except RuntimeError as error:
+        except Exception as error:
             print(f'An error has occurred while saving the trace log: {error}')
             traceback.print_exc()
 
@@ -43,7 +43,7 @@ class Logger(AbstractLogger):
     ) -> Log:
         try:
             return self.save(LogType.types['DEBUG'], content, opts)
-        except RuntimeError as error:
+        except Exception as error:
             print(f'An error has occurred while saving the debug log: {error}')
             traceback.print_exc()
 
@@ -54,7 +54,7 @@ class Logger(AbstractLogger):
     ) -> Log:
         try:
             return self.save(LogType.types['INFO'], content, opts)
-        except RuntimeError as error:
+        except Exception as error:
             print(f'An error has occurred while saving the info log: {error}')
             traceback.print_exc()
 
@@ -65,7 +65,7 @@ class Logger(AbstractLogger):
     ) -> Log:
         try:
             return self.save(LogType.types['WARN'], content, opts)
-        except RuntimeError as error:
+        except Exception as error:
             print(f'An error has occurred while saving the warning log: {error}')
             traceback.print_exc()
 
@@ -76,7 +76,7 @@ class Logger(AbstractLogger):
     ) -> Log:
         try:
             return self.save(LogType.types['ERROR'], content, opts)
-        except RuntimeError as error:
+        except Exception as error:
             print(f'An error has occurred while saving the error log: {error}')
             traceback.print_exc()
 
@@ -87,7 +87,7 @@ class Logger(AbstractLogger):
     ) -> Log:
         try:
             return self.save(LogType.types['FATAL'], content, opts)
-        except RuntimeError as error:
+        except Exception as error:
             print(f'An error has occurred while saving the fatal log: {error}')
             traceback.print_exc()
 
@@ -98,7 +98,7 @@ class Logger(AbstractLogger):
         opts: Union[LoggingOptions, None]
     ) -> Log:
         try:
-            log = ''
+            log = None
             database = BaseModel._meta.database
 
             data: LogAttributes = {
@@ -121,5 +121,6 @@ class Logger(AbstractLogger):
             return log
         except DatabaseError as error:
             print(f'An error has occurred while saving the log: {error}')
+        except Exception as error:
+            print(f'Unexpected error: {error}')
             traceback.print_exc()
-

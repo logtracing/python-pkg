@@ -2,7 +2,7 @@ import os
 from peewee import Model, MySQLDatabase
 from config.database import DB_CONFIG
 
-env = os.getenv('PYTHON_ENV') or 'development'
+env = os.getenv('PYTHON_ENV', 'development')
 config = DB_CONFIG[env]
 
 database = MySQLDatabase(

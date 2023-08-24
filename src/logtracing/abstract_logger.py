@@ -25,5 +25,6 @@ class AbstractLogger:
             return group
         except DatabaseError as error:
             print(f'An error occurred while trying to get or create a group: {error}')
+        except Exception:
             traceback.print_exc()
             return None
