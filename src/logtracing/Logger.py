@@ -18,8 +18,10 @@ class Logger(AbstractLogger):
         self.options = options
         self._slack_integration = False
 
-        if options and options.slack_integration:
-            self._slack_integration = options.slack_integration
+        if options\
+            and isinstance(options, dict) \
+                and options.get('slack_integration'):
+                    self._slack_integration = options['slack_integration']
 
     @property
     def slack_integrations(self) -> bool:
@@ -28,10 +30,10 @@ class Logger(AbstractLogger):
     def trace(
         self,
         content: str,
-        opts: Union[LoggingOptions, None]=None
+        options: Union[LoggingOptions, None]=None
     ) -> LogModel:
         try:
-            return self.save(LogType.types['TRACE'], content, opts)
+            return self.save(LogType.types['TRACE'], content, options)
         except Exception as error:
             print(f'An error has occurred while saving the trace log: {error}')
             traceback.print_exc()
@@ -39,10 +41,10 @@ class Logger(AbstractLogger):
     def debug(
         self,
         content: str,
-        opts: Union[LoggingOptions, None]=None
+        options: Union[LoggingOptions, None]=None
     ) -> LogModel:
         try:
-            return self.save(LogType.types['DEBUG'], content, opts)
+            return self.save(LogType.types['DEBUG'], content, options)
         except Exception as error:
             print(f'An error has occurred while saving the debug log: {error}')
             traceback.print_exc()
@@ -50,10 +52,10 @@ class Logger(AbstractLogger):
     def info(
         self,
         content: str,
-        opts: Union[LoggingOptions, None]=None
+        options: Union[LoggingOptions, None]=None
     ) -> LogModel:
         try:
-            return self.save(LogType.types['INFO'], content, opts)
+            return self.save(LogType.types['INFO'], content, options)
         except Exception as error:
             print(f'An error has occurred while saving the info log: {error}')
             traceback.print_exc()
@@ -61,10 +63,10 @@ class Logger(AbstractLogger):
     def warn(
         self,
         content: str,
-        opts: Union[LoggingOptions, None]=None
+        options: Union[LoggingOptions, None]=None
     ) -> LogModel:
         try:
-            return self.save(LogType.types['WARN'], content, opts)
+            return self.save(LogType.types['WARN'], content, options)
         except Exception as error:
             print(f'An error has occurred while saving the warning log: {error}')
             traceback.print_exc()
@@ -72,10 +74,10 @@ class Logger(AbstractLogger):
     def error(
         self,
         content: str,
-        opts: Union[LoggingOptions, None]=None
+        options: Union[LoggingOptions, None]=None
     ) -> LogModel:
         try:
-            return self.save(LogType.types['ERROR'], content, *opts)
+            return self.save(LogType.types['ERROR'], content, options)
         except Exception as error:
             print(f'An error has occurred while saving the error log: {error}')
             traceback.print_exc()
@@ -83,10 +85,10 @@ class Logger(AbstractLogger):
     def fatal(
         self,
         content: str,
-        opts: Union[LoggingOptions, None]=None
+        options: Union[LoggingOptions, None]=None
     ) -> LogModel:
         try:
-            return self.save(LogType.types['FATAL'], content, opts)
+            return self.save(LogType.types['FATAL'], content, options)
         except Exception as error:
             print(f'An error has occurred while saving the fatal log: {error}')
             traceback.print_exc()
@@ -95,7 +97,7 @@ class Logger(AbstractLogger):
         self,
         level: str,
         content: str,
-        opts: Union[LoggingOptions, None]=None
+        options: Union[LoggingOptions, None]=None
     ) -> LogModel:
         try:
             log = None
@@ -107,10 +109,10 @@ class Logger(AbstractLogger):
                 'content': content
             }
 
-            if opts\
-                and isinstance(opts, dict)\
-                    and opts.get('group'):
-                        data['log_group_id'] = opts['group'].id
+            if options\
+                and isinstance(options, dict)\
+                    and options.get('group'):
+                        data['log_group_id'] = options['group'].id
 
             with database.atomic():
                 log = LogModel.create(
