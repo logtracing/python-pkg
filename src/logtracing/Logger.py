@@ -1,107 +1,130 @@
-import os
-import sys
-import json
-import time
-import psutil
-import platform
 import traceback
-from typing import Union
-from Types import CodeLine, ErrorStack, PythonVars, OsVars, PrepareStackTrace
+from typing import Optional, Union
+from pymysql import DatabaseError
+
+from db.models.main import BaseModel
+from db.models.log import Log as LogModel
+from abstract_logger import AbstractLogger
+from base_classes import LogTracingOptions, LoggingOptions, LogAttributes, LogType
 
 
-class Logger:
-    def __init__(self, flow: str):
-        if not flow:
-            raise Exception('Flow argument is missing')
+class Logger(AbstractLogger):
+    def __init__(
+        self,
+        flow: str,
+        options: Optional[LogTracingOptions]=None
+    ) -> None:
+        super().__init__(flow)
+        self.options = options
+        self._slack_integration = False
 
-        self._flow = flow
-        self.prepare_stack_trace: PrepareStackTrace = traceback.extract_stack
-        self.err_stack: Union[ErrorStack, None] = None
-        self.os_vars: Union[OsVars, None] = None
-        self.python_vars: Union[PythonVars, None] = None
-        self.env_vars: Union[os.environ, None] = None
-        self.extra_vars = {}
-        self.code_lines_limit: int = 5
+        if options\
+            and isinstance(options, dict) \
+                and options.get('slack_integration'):
+                    self._slack_integration = options['slack_integration']
 
     @property
-    def flow(self) -> str:
-        return self._flow
+    def slack_integrations(self) -> bool:
+        return self._slack_integration
 
-    def track_error(self, err) -> None:
-        if not err:
-            raise Exception('Error argument is missing')
+    def trace(
+        self,
+        content: str,
+        options: Union[LoggingOptions, None]=None
+    ) -> LogModel:
+        try:
+            return self.save(LogType.types['TRACE'], content, options)
+        except Exception as error:
+            print(f'An error has occurred while saving the trace log: {error}')
+            traceback.print_exc()
 
-    def report(self) -> None:
-        self.load_os_vars()
-        self.load_python_vars()
-        self.load_env_vars()
+    def debug(
+        self,
+        content: str,
+        options: Union[LoggingOptions, None]=None
+    ) -> LogModel:
+        try:
+            return self.save(LogType.types['DEBUG'], content, options)
+        except Exception as error:
+            print(f'An error has occurred while saving the debug log: {error}')
+            traceback.print_exc()
 
-        print(self.err_stack)
-        print(self.os_vars)
-        print(self.env_vars)
-        print(self.python_vars)
-        print(self.extra_vars)
+    def info(
+        self,
+        content: str,
+        options: Union[LoggingOptions, None]=None
+    ) -> LogModel:
+        try:
+            return self.save(LogType.types['INFO'], content, options)
+        except Exception as error:
+            print(f'An error has occurred while saving the info log: {error}')
+            traceback.print_exc()
 
-    def add_extra(self, identifier: str, extra) -> None:
-        if not isinstance(extra, (dict, str)):
-            raise ValueError('extra must be dict or str')
+    def warn(
+        self,
+        content: str,
+        options: Union[LoggingOptions, None]=None
+    ) -> LogModel:
+        try:
+            return self.save(LogType.types['WARN'], content, options)
+        except Exception as error:
+            print(f'An error has occurred while saving the warning log: {error}')
+            traceback.print_exc()
 
-        extra = json.dumps(extra) if isinstance(extra, dict) else extra
-        self.extra_vars[identifier] = extra
+    def error(
+        self,
+        content: str,
+        options: Union[LoggingOptions, None]=None
+    ) -> LogModel:
+        try:
+            return self.save(LogType.types['ERROR'], content, options)
+        except Exception as error:
+            print(f'An error has occurred while saving the error log: {error}')
+            traceback.print_exc()
 
-    def read_line(self, file_path: str, start: int, end: int) -> CodeLine:
-        pass
+    def fatal(
+        self,
+        content: str,
+        options: Union[LoggingOptions, None]=None
+    ) -> LogModel:
+        try:
+            return self.save(LogType.types['FATAL'], content, options)
+        except Exception as error:
+            print(f'An error has occurred while saving the fatal log: {error}')
+            traceback.print_exc()
 
-    def use_custom_prepare_stack_trace(self) -> None:
-        pass
+    def save(
+        self,
+        level: str,
+        content: str,
+        options: Union[LoggingOptions, None]=None
+    ) -> LogModel:
+        try:
+            log = None
+            database = BaseModel._meta.database
 
-    def restore_prepare_stack_trace(self) -> None:
-        traceback.extract_stack = self.prepare_stack_trace
-
-    def load_os_vars(self) -> None:
-        self.os_vars = {
-            "arch": platform.architecture(),
-            "cpus": self.get_cpus_info(),
-            "hostname": platform.node(),
-            "machine": platform.machine(),
-            "platform": platform.system(),
-            "release": platform.release(),
-            "version": platform.version(),
-            "user": {
-                "username": psutil.users()[0].name,
-                "uid": os.getuid(),
-                "gid": os.getgid(),
+            data: LogAttributes = {
+                'level': level,
+                'flow': self.flow,
+                'content': content
             }
-        }
 
-    def get_cpus_info(self) -> list:
-        cpus_info = []
-        cpus = psutil.cpu_times(percpu=True)
+            if options\
+                and isinstance(options, dict)\
+                    and options.get('group'):
+                        data['log_group_id'] = options['group'].id
 
-        for cpu in cpus:
-            cpu_data = {
-                "model": platform.processor(),
-                "speed": psutil.cpu_freq().current,
-                "times": {
-                    "user": cpu.user,
-                    "nice": cpu.nice,
-                    "sys": cpu.system,
-                    "idle": cpu.idle,
-                    "irq": cpu.irq
-                }
-            }
+            with database.atomic():
+                log = LogModel.create(
+                    level=data['level'],
+                    flow=data['flow'],
+                    content=data['content'],
+                    log_group=data.get('log_group_id')
+                )
 
-            cpus_info.append(cpu_data)
-
-        return cpus_info
-
-    def load_python_vars(self) -> None:
-        self.python_vars = {
-            "version": sys.version,
-            "args": sys.argv,
-            "datetime": int(time.time())
-        }
-
-    def load_env_vars(self) -> None:
-        self.env_vars = os.environ
-
+            return log
+        except DatabaseError as error:
+            print(f'Database error: {error}')
+        except Exception as error:
+            print(f'Unexpected error: {error}')
+            traceback.print_exc()

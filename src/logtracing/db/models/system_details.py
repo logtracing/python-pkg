@@ -1,5 +1,5 @@
-from main import BaseModel
-from error_exception import ErrorException
+from .main import BaseModel
+from .error_exception import ErrorException
 from peewee import CharField, ForeignKeyField
 
 

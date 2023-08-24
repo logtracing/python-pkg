@@ -1,5 +1,5 @@
-from main import BaseModel
-from stack import Stack
+from .main import BaseModel
+from .stack import Stack
 from peewee import IntegerField, CharField, ForeignKeyField
 
 
