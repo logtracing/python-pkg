@@ -10,7 +10,7 @@ def main():
     warn = log.warn('This is a warn log')
     error = log.error('This is a error log')
     fatal = log.fatal('This is a fatal log')
-    
+
     # prints the id of the record stored in the database
     print(trace)
     print(debug)
