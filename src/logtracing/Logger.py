@@ -2,8 +2,8 @@ import traceback
 from typing import Optional, Union
 from pymysql import DatabaseError
 
-from db.models.log import Log
 from db.models.main import BaseModel
+from db.models.log import Log as LogModel
 from abstract_logger import AbstractLogger
 from base_classes import LogTracingOptions, LoggingOptions, LogAttributes, LogType
 
@@ -28,8 +28,8 @@ class Logger(AbstractLogger):
     def trace(
         self,
         content: str,
-        opts: Union[LoggingOptions, None]
-    ) -> Log:
+        opts: Union[LoggingOptions, None]=None
+    ) -> LogModel:
         try:
             return self.save(LogType.types['TRACE'], content, opts)
         except Exception as error:
@@ -39,8 +39,8 @@ class Logger(AbstractLogger):
     def debug(
         self,
         content: str,
-        opts: Union[LoggingOptions, None]
-    ) -> Log:
+        opts: Union[LoggingOptions, None]=None
+    ) -> LogModel:
         try:
             return self.save(LogType.types['DEBUG'], content, opts)
         except Exception as error:
@@ -50,8 +50,8 @@ class Logger(AbstractLogger):
     def info(
         self,
         content: str,
-        opts: Union[LoggingOptions, None]
-    ) -> Log:
+        opts: Union[LoggingOptions, None]=None
+    ) -> LogModel:
         try:
             return self.save(LogType.types['INFO'], content, opts)
         except Exception as error:
@@ -61,8 +61,8 @@ class Logger(AbstractLogger):
     def warn(
         self,
         content: str,
-        opts: Union[LoggingOptions, None]
-    ) -> Log:
+        opts: Union[LoggingOptions, None]=None
+    ) -> LogModel:
         try:
             return self.save(LogType.types['WARN'], content, opts)
         except Exception as error:
@@ -72,10 +72,10 @@ class Logger(AbstractLogger):
     def error(
         self,
         content: str,
-        opts: Union[LoggingOptions, None]
-    ) -> Log:
+        opts: Union[LoggingOptions, None]=None
+    ) -> LogModel:
         try:
-            return self.save(LogType.types['ERROR'], content, opts)
+            return self.save(LogType.types['ERROR'], content, *opts)
         except Exception as error:
             print(f'An error has occurred while saving the error log: {error}')
             traceback.print_exc()
@@ -83,8 +83,8 @@ class Logger(AbstractLogger):
     def fatal(
         self,
         content: str,
-        opts: Union[LoggingOptions, None]
-    ) -> Log:
+        opts: Union[LoggingOptions, None]=None
+    ) -> LogModel:
         try:
             return self.save(LogType.types['FATAL'], content, opts)
         except Exception as error:
@@ -95,8 +95,8 @@ class Logger(AbstractLogger):
         self,
         level: str,
         content: str,
-        opts: Union[LoggingOptions, None]
-    ) -> Log:
+        opts: Union[LoggingOptions, None]=None
+    ) -> LogModel:
         try:
             log = None
             database = BaseModel._meta.database
@@ -107,20 +107,22 @@ class Logger(AbstractLogger):
                 'content': content
             }
 
-            # TODO refactor the condition
-            # if opts and opts.group:
-            #     data.log_group_id = opts.group.id
+            if opts\
+                and isinstance(opts, dict)\
+                    and opts.get('group'):
+                        data['log_group_id'] = opts['group'].id
 
             with database.atomic():
-                log = Log.create(
+                log = LogModel.create(
                     level=data['level'],
                     flow=data['flow'],
-                    content=data['content']
+                    content=data['content'],
+                    log_group=data.get('log_group_id')
                 )
 
             return log
         except DatabaseError as error:
-            print(f'An error has occurred while saving the log: {error}')
+            print(f'Database error: {error}')
         except Exception as error:
             print(f'Unexpected error: {error}')
             traceback.print_exc()

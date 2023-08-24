@@ -144,7 +144,7 @@ class SlackMessageSection:
 class LoggingOptions:
     def __init__(
         self,
-        group: Optional[Any],
+        group: Optional[List],
         slack_message_extra_sections: Optional[List[SlackMessageSection]]
     ) -> None:
         self.group = group
