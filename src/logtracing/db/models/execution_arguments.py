@@ -9,7 +9,13 @@ class UnknownField(object):
 
 class ExecutionArguments(BaseModel):
     argument = CharField(null=True)
-    execution_details = ForeignKeyField(column_name='executionDetailsId', field='id', model=ExecutionDetails, null=True)
+    execution_details = ForeignKeyField(
+        column_name='executionDetailsId',
+        field='id',
+        model=ExecutionDetails,
+        on_delete='CASCADE',
+        null=True
+    )
 
     class Meta:
         table_name = 'executionArguments'

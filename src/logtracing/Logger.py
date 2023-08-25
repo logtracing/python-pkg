@@ -1,4 +1,4 @@
-import traceback
+import logging
 from typing import Optional, Union
 from pymysql import DatabaseError
 
@@ -20,8 +20,8 @@ class Logger(AbstractLogger):
 
         if options\
             and isinstance(options, dict) \
-                and options.get('slack_integration'):
-                    self._slack_integration = options['slack_integration']
+            and options.get('slack_integration'):
+            self._slack_integration = options['slack_integration']
 
     @property
     def slack_integrations(self) -> bool:
@@ -35,8 +35,7 @@ class Logger(AbstractLogger):
         try:
             return self.save(LogType.types['TRACE'], content, options)
         except Exception as error:
-            print(f'An error has occurred while saving the trace log: {error}')
-            traceback.print_exc()
+            logging.error('An error has occurred while saving the trace log: %s', error)
 
     def debug(
         self,
@@ -46,8 +45,7 @@ class Logger(AbstractLogger):
         try:
             return self.save(LogType.types['DEBUG'], content, options)
         except Exception as error:
-            print(f'An error has occurred while saving the debug log: {error}')
-            traceback.print_exc()
+            logging.error('An error has occurred while saving the debug log: %s', error)
 
     def info(
         self,
@@ -57,8 +55,7 @@ class Logger(AbstractLogger):
         try:
             return self.save(LogType.types['INFO'], content, options)
         except Exception as error:
-            print(f'An error has occurred while saving the info log: {error}')
-            traceback.print_exc()
+            logging.error('An error has occurred while saving the info log: %s', error)
 
     def warn(
         self,
@@ -68,8 +65,7 @@ class Logger(AbstractLogger):
         try:
             return self.save(LogType.types['WARN'], content, options)
         except Exception as error:
-            print(f'An error has occurred while saving the warning log: {error}')
-            traceback.print_exc()
+            logging.error('An error has occurred while saving the warn log: %s', error)
 
     def error(
         self,
@@ -79,8 +75,7 @@ class Logger(AbstractLogger):
         try:
             return self.save(LogType.types['ERROR'], content, options)
         except Exception as error:
-            print(f'An error has occurred while saving the error log: {error}')
-            traceback.print_exc()
+            logging.error('An error has occurred while saving the error log: %s', error)
 
     def fatal(
         self,
@@ -90,8 +85,7 @@ class Logger(AbstractLogger):
         try:
             return self.save(LogType.types['FATAL'], content, options)
         except Exception as error:
-            print(f'An error has occurred while saving the fatal log: {error}')
-            traceback.print_exc()
+            logging.error('An error has occurred while saving the fatal log: %s', error)
 
     def save(
         self,
@@ -111,8 +105,8 @@ class Logger(AbstractLogger):
 
             if options\
                 and isinstance(options, dict)\
-                    and options.get('group'):
-                        data['log_group_id'] = options['group'].id
+                and options.get('group'):
+                data['log_group_id'] = options['group'].id
 
             with database.atomic():
                 log = LogModel.create(
@@ -124,7 +118,6 @@ class Logger(AbstractLogger):
 
             return log
         except DatabaseError as error:
-            print(f'Database error: {error}')
+            logging.error('Database error in Logger at save: %s', error)
         except Exception as error:
-            print(f'Unexpected error: {error}')
-            traceback.print_exc()
+            logging.error('Unexpected error in Logger at save: %s', error)

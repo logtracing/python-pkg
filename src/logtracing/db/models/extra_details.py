@@ -11,7 +11,13 @@ class ExtraDetails(BaseModel):
     name = CharField(null=True)
     value = CharField(null=True)
     is_json = IntegerField(column_name='isJson', null=True)
-    error_exception = ForeignKeyField(column_name='errorExceptionId', field='id', model=ErrorException, null=True)
+    error_exception = ForeignKeyField(
+        column_name='errorExceptionId',
+        field='id',
+        model=ErrorException,
+        on_delete='CASCADE',
+        null=True
+    )
 
     class Meta:
         table_name = 'extraDetails'
