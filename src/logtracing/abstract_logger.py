@@ -1,3 +1,4 @@
+import logging
 import traceback
 from typing import Union
 from pymysql import DatabaseError
@@ -24,7 +25,7 @@ class AbstractLogger:
 
             return group
         except DatabaseError as error:
-            print(f'An error occurred while trying to get or create a group: {error}')
-        except Exception:
-            traceback.print_exc()
+            logging.error('An error occurred while trying to get or create a group: %s', error)
+        except Exception as error:
+            logging.error('Unexpected error in AbstractLogger at get_or_create_group: %s', error)
             return None
