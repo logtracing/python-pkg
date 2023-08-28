@@ -69,4 +69,4 @@ class SlackMessageSender:
             response = self.client.chat_postMessage(**message)
             print(response)
         except SlackApiError as e:
-            print('Error sending message: ', e)
+            print(f'Error sending message: ${e}')
