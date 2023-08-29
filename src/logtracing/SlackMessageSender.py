@@ -1,4 +1,5 @@
 import os
+import logging
 from dotenv import load_dotenv
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
@@ -68,5 +69,7 @@ class SlackMessageSender:
         try:
             response = self.client.chat_postMessage(**message)
             print(response)
-        except SlackApiError as e:
-            print(f'Error sending message: ${e}')
+        except SlackApiError as error:
+            logging.error('Error sending message: %s', error)
+        except Exception as error:
+            logging.error('Unexpected error in SlackMessageSender at publish_message: %s', error)
