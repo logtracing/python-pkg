@@ -1,4 +1,4 @@
-from ...logger import Logger
+from logger import *
 
 def main():
     log = Logger('Logs basic usage', {
