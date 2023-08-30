@@ -1,4 +1,5 @@
-from main import BaseModel
+from datetime import datetime
+from .main import BaseModel
 from peewee import DateTimeField, CharField
 
 
@@ -8,8 +9,12 @@ class UnknownField(object):
 
 class LogGroup(BaseModel):
     name = CharField(null=True, unique=True)
-    created_at = DateTimeField(column_name='createdAt')
-    updated_at = DateTimeField(column_name='updatedAt')
+    updated_at = DateTimeField(column_name='updatedAt', default=datetime.now)
+    created_at = DateTimeField(column_name='createdAt', default=datetime.now)
+
+    def save(self, *args, **kwargs):
+        self.updated_at = datetime.now()
+        super(LogGroup, self).save(*args, **kwargs)
 
     class Meta:
         table_name = 'logGroups'

@@ -1,5 +1,5 @@
-from main import BaseModel
-from error_exception import ErrorException
+from .main import BaseModel
+from .error_exception import ErrorException
 from peewee import IntegerField, CharField, ForeignKeyField
 
 
@@ -12,7 +12,13 @@ class Stack(BaseModel):
     line = IntegerField(null=True)
     function = CharField(null=True)
     column = IntegerField(null=True)
-    error_exception = ForeignKeyField(column_name='errorExceptionId', field='id', model=ErrorException, null=True)
+    error_exception = ForeignKeyField(
+        column_name='errorExceptionId',
+        field='id',
+        model=ErrorException,
+        on_delete='CASCADE',
+        null=True
+    )
 
     class Meta:
         table_name = 'stack'

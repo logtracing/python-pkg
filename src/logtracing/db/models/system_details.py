@@ -1,5 +1,5 @@
-from main import BaseModel
-from error_exception import ErrorException
+from .main import BaseModel
+from .error_exception import ErrorException
 from peewee import CharField, ForeignKeyField
 
 
@@ -15,7 +15,13 @@ class SystemDetails(BaseModel):
     processor = CharField(null=True)
     platform_release = CharField(column_name='platformRelease', null=True)
     platform_version = CharField(column_name='platformVersion', null=True)
-    error_exception = ForeignKeyField(column_name='errorExceptionId', field='id', model=ErrorException, null=True)
+    error_exception = ForeignKeyField(
+        column_name='errorExceptionId',
+        field='id',
+        model=ErrorException,
+        on_delete='CASCADE',
+        null=True
+    )
 
     class Meta:
         table_name = 'systemDetails'
