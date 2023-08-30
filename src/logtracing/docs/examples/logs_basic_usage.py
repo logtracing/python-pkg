@@ -1,7 +1,10 @@
-from ...logger import Logger
+from logger import *
 
 def main():
-    log = Logger('Logs basic usage')
+    log = Logger('Logs basic usage', {
+        'slack_integration': True,
+    })
+
     group = log.get_or_create_group('LOGS_BASIC_EXAMPLE')
 
     trace = log.trace('This is a trace log', { 'group': group })

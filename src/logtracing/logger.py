@@ -6,6 +6,7 @@ from db.models.main import BaseModel
 from db.models.log import Log as LogModel
 from abstract_logger import AbstractLogger
 from base_classes import LogTracingOptions, LoggingOptions, LogAttributes, LogType
+from SlackMessageSender import SlackMessageSender
 
 
 class Logger(AbstractLogger):
@@ -115,6 +116,15 @@ class Logger(AbstractLogger):
                     content=data['content'],
                     log_group=data.get('log_group_id')
                 )
+
+            if self._slack_integration:
+                slack_sender = SlackMessageSender.get_instance()
+                message = slack_sender.get_base_message_template(
+                    title = self.flow,
+                    log = log
+                )
+
+                slack_sender.publish_message(message)
 
             return log
         except DatabaseError as error:
