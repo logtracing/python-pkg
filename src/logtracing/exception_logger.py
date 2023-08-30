@@ -83,9 +83,7 @@ class ExceptionLogger(AbstractLogger):
                 cpus_info.append(cpu_data)
 
             return cpus_info
-        except AttributeError:
-            pass
-        except FileNotFoundError:
+        except (AttributeError, FileNotFoundError):
             pass
         except psutil.AccessDenied as error:
             logging.error('Permission denied in ExceptionLogger at get_cpus_info: %s', error)
