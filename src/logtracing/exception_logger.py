@@ -60,9 +60,7 @@ class ExceptionLogger(AbstractLogger):
         except Exception as error:
             logging.error('Unexpected error in ExceptionLogger at load_os_vars: %s', error)
 
-    def get_cpus_info(
-        self
-    ) -> list:
+    def get_cpus_info(self) -> list:
         try:
             cpus_info = []
             cpus = psutil.cpu_times(percpu=True)
