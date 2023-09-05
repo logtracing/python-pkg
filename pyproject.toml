@@ -17,6 +17,21 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 
+[tool.poetry.dependencies]
+build==1.0.0
+cffi==1.15.1
+click==8.1.7
+cryptography==41.0.2
+packaging==23.1
+peewee==3.16.2
+peewee-migrations==0.3.32
+psutil==5.9.5
+pycparser==2.21
+PyMySQL==1.1.0
+pyproject_hooks==1.0.0
+python-dotenv==1.0.0
+slack-sdk==3.0.0
+
 [project.urls]
 "Homepage" = "https://github.com/logtracing/python-pkg"
 "Bug Tracker" = "https://github.com/logtracing/python-pkg/issues"
