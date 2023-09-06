@@ -1,7 +1,7 @@
 from datetime import datetime
-from .main import BaseModel
-from .log_group import LogGroup
 from peewee import SQL, Check, TextField, DateTimeField, CharField, ForeignKeyField
+from logtracing.db.models.main import BaseModel
+from logtracing.db.models.log_group import LogGroup
 
 
 class UnknownField(object):

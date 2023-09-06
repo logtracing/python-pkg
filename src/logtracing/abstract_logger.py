@@ -1,8 +1,7 @@
 import logging
-import traceback
 from typing import Union
 from pymysql import DatabaseError
-from db.models.log_group import LogGroup
+from logtracing.db.models.log_group import LogGroup
 
 class AbstractLogger:
     def __init__(self, flow: str):

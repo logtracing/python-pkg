@@ -1,6 +1,6 @@
-from .main import BaseModel
-from .execution_details import ExecutionDetails
 from peewee import CharField, ForeignKeyField
+from logtracing.db.models.main import BaseModel
+from logtracing.db.models.execution_details import ExecutionDetails
 
 
 class UnknownField(object):

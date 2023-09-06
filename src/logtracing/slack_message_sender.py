@@ -7,7 +7,7 @@ from slack_sdk.errors import SlackApiError
 class SlackMessageSender:
     load_dotenv()
     _instance = None
-    
+
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super(SlackMessageSender, cls).__new__(cls)

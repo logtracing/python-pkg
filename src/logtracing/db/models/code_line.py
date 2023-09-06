@@ -1,6 +1,6 @@
-from .main import BaseModel
-from .stack import Stack
 from peewee import IntegerField, CharField, ForeignKeyField
+from logtracing.db.models.main import BaseModel
+from logtracing.db.models.stack import Stack
 
 
 class UnknownField(object):

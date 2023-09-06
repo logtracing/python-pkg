@@ -1,6 +1,6 @@
 from datetime import datetime
-from .main import BaseModel
 from peewee import DateTimeField, CharField
+from logtracing.db.models.main import BaseModel
 
 
 class UnknownField(object):
