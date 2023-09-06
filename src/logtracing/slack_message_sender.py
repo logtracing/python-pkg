@@ -67,8 +67,7 @@ class SlackMessageSender:
 
     def publish_message(self, message):
         try:
-            response = self.client.chat_postMessage(**message)
-            print(response)
+            self.client.chat_postMessage(**message)
         except SlackApiError as error:
             logging.error('Error sending message: %s', error)
         except Exception as error:
