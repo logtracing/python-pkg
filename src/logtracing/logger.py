@@ -124,6 +124,11 @@ class Logger(AbstractLogger):
                     log = log
                 )
 
+                if options\
+                    and isinstance(options, dict)\
+                    and options.get('slack_message_extra_sections'):
+                    message.blocks.append(options.slack_message_extra_sections)
+
                 slack_sender.publish_message(message)
 
             return log
