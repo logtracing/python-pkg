@@ -29,7 +29,7 @@ class SlackMessageSender:
         return {
             'token': os.getenv('SLACK_TOKEN'),
             'channel': os.getenv('SLACK_CHANNEL_ID'),
-            'text': log.content,
+            'text': str(log.content),
             'blocks': [
                 {
                     'type': 'header',
