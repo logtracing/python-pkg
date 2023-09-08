@@ -1,6 +1,7 @@
 import traceback
 from datetime import datetime
 from typing import List, Union, Optional, Any, Dict
+from db.models.log_group import LogGroup
 
 # Error Exception
 class PrepareStackTrace:
@@ -328,3 +329,38 @@ class ModelSearchQuery:
         self.where = where
         self.order = order
         self.include = include
+
+class LogReporterOptions:
+    def __init__(
+        self,
+        limit: Optional[int]=None,
+        offset: Optional[int]=None,
+        level: Optional[LogType]=None,
+        group_name: Optional[LogGroup]=None,
+    ) -> None:
+        self.limit = limit
+        self.offset = offset
+        self.level = level
+        self.group_name = group_name
+
+class LogReporterSegments:
+    def __init__(
+        self,
+        identifier: List[str]=None
+    ) -> None:
+        self.identifier = identifier
+
+class LogReporterObject:
+    def __init__(
+        self,
+        flow: str,
+        datetime: str,
+        level: LogType,
+        content: str,
+        group: Optional[LogGroup]=None,
+    ) -> None:
+        self.flow = flow
+        self.datetime = datetime
+        self.level = level
+        self.content = content
+        self.group = group
