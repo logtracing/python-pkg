@@ -1,6 +1,6 @@
-from .main import BaseModel
-from .error_exception import ErrorException
 from peewee import IntegerField, CharField, ForeignKeyField
+from logtracing.db.models.main import BaseModel
+from logtracing.db.models.error_exception import ErrorException
 
 
 class UnknownField(object):

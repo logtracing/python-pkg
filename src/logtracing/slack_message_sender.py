@@ -7,7 +7,7 @@ from slack_sdk.errors import SlackApiError
 class SlackMessageSender:
     load_dotenv()
     _instance = None
-    
+
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super(SlackMessageSender, cls).__new__(cls)
@@ -29,7 +29,7 @@ class SlackMessageSender:
         return {
             'token': os.getenv('SLACK_TOKEN'),
             'channel': os.getenv('SLACK_CHANNEL_ID'),
-            'text': log.content,
+            'text': str(log.content),
             'blocks': [
                 {
                     'type': 'header',
@@ -67,8 +67,7 @@ class SlackMessageSender:
 
     def publish_message(self, message):
         try:
-            response = self.client.chat_postMessage(**message)
-            print(response)
+            self.client.chat_postMessage(**message)
         except SlackApiError as error:
             logging.error('Error sending message: %s', error)
         except Exception as error:

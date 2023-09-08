@@ -2,11 +2,11 @@ import logging
 from typing import Optional, Union
 from pymysql import DatabaseError
 
-from db.models.main import BaseModel
-from db.models.log import Log as LogModel
-from abstract_logger import AbstractLogger
-from base_classes import LogTracingOptions, LoggingOptions, LogAttributes, LogType
-from SlackMessageSender import SlackMessageSender
+from logtracing.db.models.main import BaseModel
+from logtracing.db.models.log import Log as LogModel
+from logtracing.abstract_logger import AbstractLogger
+from logtracing.base_classes import LogTracingOptions, LoggingOptions, LogAttributes, LogType
+from logtracing.slack_message_sender import SlackMessageSender
 
 
 class Logger(AbstractLogger):
@@ -123,6 +123,11 @@ class Logger(AbstractLogger):
                     title = self.flow,
                     log = log
                 )
+
+                if options\
+                    and isinstance(options, dict)\
+                    and options.get('slack_message_extra_sections'):
+                    message['blocks'].append(options['slack_message_extra_sections'])
 
                 slack_sender.publish_message(message)
 
