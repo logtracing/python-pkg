@@ -328,3 +328,16 @@ class ModelSearchQuery:
         self.where = where
         self.order = order
         self.include = include
+
+class LogReporterOptions:
+    def __init__(
+        self,
+        limit: Optional[int]=None,
+        offset: Optional[int]=None,
+        level: Optional[str]=None,
+        group_name: Optional[str]=None
+    ) -> None:
+        self.limit = limit
+        self.offset = offset
+        self.level = level
+        self.group_name = group_name

@@ -3,7 +3,7 @@ from typing import Optional, Union
 from pymysql import DatabaseError
 
 from db.models.main import BaseModel
-from db.models.log import Log as LogModel
+from db.models.log import Log as LogModel, LogGroup as LogGroupModel
 from abstract_logger import AbstractLogger
 from base_classes import LogTracingOptions, LoggingOptions, LogAttributes, LogType
 from SlackMessageSender import SlackMessageSender
